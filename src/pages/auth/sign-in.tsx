@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-import { SignInForm } from './sign-in-form'
+import { SignInForm } from './components/sign-in-form'
 
 export function SignIn() {
   return (
