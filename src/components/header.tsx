@@ -1,5 +1,6 @@
 import { HomeIcon, PizzaIcon, UtensilsCrossedIcon } from 'lucide-react'
 
+import { AccountMenu } from './account-menu'
 import { ModeToggle } from './mode-toggle'
 import { NavLink } from './nav-link'
 import { Separator } from './ui/separator'
@@ -21,7 +22,10 @@ export function Header() {
           </NavLink>
         </nav>
       </div>
-      <div><ModeToggle /></div>
+      <div className='flex items-center gap-6'>
+        <ModeToggle />
+        <AccountMenu />
+      </div>
     </header>
   )
 }
