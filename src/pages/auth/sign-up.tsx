@@ -3,30 +3,30 @@ import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 
-import { SignInForm } from './components/sign-in-form'
+import { SignUpForm } from './components/sign-up-form'
 
-export function SignIn() {
+export function SignUp() {
   return (
     <>
       <Helmet title='Login' />
       <div className='p-8'>
         <div className='absolute right-8 top-8'>
-          <Link to={'/sign-up'}>
+          <Link to={'/sign-in'}>
             <Button variant={'outline'}>
-              Novo estabelecimento
+              Já é membro? Faça login
             </Button>
           </Link>
         </div>
         <div className='w-[350px] flex flex-col justify-center gap-6'>
           <div className='space-y-2 text-center'>
             <h1 className='text-2xl font-bold'>
-              Acessar painel
+              Crie sua conta gratuitamente
             </h1>
             <p className='text-sm text-muted-foreground'>
-              Acompanhe suas vendas pelo painel do parceiro.
+              Seja um parceiro e comece suas vendas.
             </p>
           </div>
-          <SignInForm />
+          <SignUpForm />
         </div>
       </div>
     </>
