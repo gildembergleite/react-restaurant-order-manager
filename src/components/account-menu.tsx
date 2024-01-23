@@ -2,13 +2,21 @@ import { DropdownMenuItem, DropdownMenuLabel } from '@radix-ui/react-dropdown-me
 import { BuildingIcon, ChevronDownIcon } from 'lucide-react'
 
 import { Button } from './ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from './ui/dropdown-menu'
 
 export function AccountMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={'outline'} className='flex items-center gap-2 select-none'>
+        <Button
+          variant={'outline'}
+          className='flex items-center gap-2 select-none'
+        >
           Pizza Shop
           <ChevronDownIcon />
         </Button>
