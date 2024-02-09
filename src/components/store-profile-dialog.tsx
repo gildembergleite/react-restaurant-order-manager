@@ -1,13 +1,12 @@
-import { getManagedRestaurant } from '@/api/get-managed-restaurant'
+import { GetManagedRestaurantResponse, getManagedRestaurant } from '@/api/get-managed-restaurant'
 import { updateProfile } from '@/api/update-profile'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DialogDescription } from '@radix-ui/react-dialog'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { Button } from './ui/button'
-import { DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog'
+import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
@@ -20,6 +19,8 @@ const storeProfileSchema = z.object({
 type StoreProfileSchema = z.infer<typeof storeProfileSchema>
 
 export function StoreProfileDialog() {
+  const queryClient = useQueryClient()
+
   const { data: managedRestaurant } = useQuery({
     queryKey: ['managed-restaurant'],
     queryFn: getManagedRestaurant,
@@ -48,8 +49,37 @@ export function StoreProfileDialog() {
     console.log(formData)
   }
 
+  function updateManagedRestaurantCache({ name, description }: StoreProfileSchema) {
+    const cached = queryClient.getQueryData<GetManagedRestaurantResponse>([
+      'managed-restaurant'
+    ])
+
+    if (cached) {
+      queryClient.setQueryData(['managed-restaurant'], {
+        ...cached,
+        name,
+        description,
+      })
+    }
+
+    return { cached }
+  }
+
   const { mutateAsync: updateProfileFn } = useMutation({
     mutationFn: updateProfile,
+    onMutate({ name, description }) {
+      const { cached } = updateManagedRestaurantCache({ name, description })
+
+      return { previousProfile: cached }
+    },
+    onError(_, __, context) {
+      if (context?.previousProfile) {
+        updateManagedRestaurantCache({
+          name: context.previousProfile.name,
+          description: context.previousProfile.description ?? '',
+        })
+      }
+    },
   })
 
   const { formState: { isSubmitting } } = form
