@@ -19,7 +19,7 @@
         "simple-import-sort"
     ],
     "rules": {
-        "simple-import-sort/imports": "error",
+        // "simple-import-sort/imports": "error",
         "react/prop-types": "off",
         "react/react-in-jsx-scope": "off",
         "indent": [
