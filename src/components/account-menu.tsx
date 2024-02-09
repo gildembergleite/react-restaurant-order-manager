@@ -4,7 +4,9 @@ import { BuildingIcon, ChevronDownIcon, LogOutIcon } from 'lucide-react'
 import { getManagedRestaurant } from '@/api/get-managed-restaurant'
 import { getProfile } from '@/api/get-profile'
 import { useQuery } from '@tanstack/react-query'
+import { StoreProfileDialog } from './store-profile-dialog'
 import { Button } from './ui/button'
+import { Dialog, DialogTrigger } from './ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,59 +22,64 @@ export function AccountMenu() {
   })
 
   const { data: managedRestaurant, isLoading: isLoadingManagedRestaurant } = useQuery({
-    queryKey: ['managedRestaurant'],
+    queryKey: ['managed-restaurant'],
     queryFn: getManagedRestaurant,
   })
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant={'outline'}
-          className='flex items-center gap-2 select-none'
-        >
-          {isLoadingManagedRestaurant
-            ? <Skeleton className='w-32 h-3 rounded-none' />
-            : managedRestaurant?.name
-          }
-          <ChevronDownIcon />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className=' p-4 w-56'>
-        <DropdownMenuLabel className='flex flex-col'>
-          {isLoadingProfile
-            ? (
-              <div className='space-y-2 mb-3'>
-                <Skeleton className='w-44 h-5 rounded-none' />
-                <Skeleton className='w-20 h-2 rounded-none' />
-                <Skeleton className='w-44 h-2 rounded-none' />
-              </div>
-            )
-            : (
-              <div className='flex flex-col gap-1.5 mb-2'>
-                <span>{profile?.name}</span>
-                <span className='text-muted-foreground capitalize text-sm'>
-                  {profile?.role}
-                </span>
-                <span className='text-muted-foreground text-sm'>
-                  {profile?.email}
-                </span>
-              </div>
-            )
-          }
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <div className='pt-4 space-y-4'>
-          <DropdownMenuItem className='flex items-center gap-2 cursor-pointer'>
-            <BuildingIcon size={16} />
-            <span>Perfil da loja</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className='flex items-center gap-2 cursor-pointer'>
-            <LogOutIcon size={16} className='text-rose-600 dark:text-rose-500' />
-            <span>Sair</span>
-          </DropdownMenuItem>
-        </div>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Dialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant={'outline'}
+            className='flex items-center gap-2 select-none'
+          >
+            {isLoadingManagedRestaurant
+              ? <Skeleton className='w-32 h-3 rounded-none' />
+              : managedRestaurant?.name
+            }
+            <ChevronDownIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align='end' className=' p-4 w-56'>
+          <DropdownMenuLabel className='flex flex-col'>
+            {isLoadingProfile
+              ? (
+                <div className='space-y-2 mb-3'>
+                  <Skeleton className='w-44 h-5 rounded-none' />
+                  <Skeleton className='w-20 h-2 rounded-none' />
+                  <Skeleton className='w-44 h-2 rounded-none' />
+                </div>
+              )
+              : (
+                <div className='flex flex-col gap-1.5 mb-2'>
+                  <span>{profile?.name}</span>
+                  <span className='text-muted-foreground capitalize text-sm'>
+                    {profile?.role}
+                  </span>
+                  <span className='text-muted-foreground text-sm'>
+                    {profile?.email}
+                  </span>
+                </div>
+              )
+            }
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <div className='pt-4 space-y-4'>
+            <DialogTrigger asChild>
+              <DropdownMenuItem className='flex items-center gap-2 cursor-pointer'>
+                <BuildingIcon size={16} />
+                <span>Perfil da loja</span>
+              </DropdownMenuItem>
+            </DialogTrigger>
+            <DropdownMenuItem className='flex items-center gap-2 cursor-pointer'>
+              <LogOutIcon size={16} className='text-rose-600 dark:text-rose-500' />
+              <span>Sair</span>
+            </DropdownMenuItem>
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <StoreProfileDialog />
+    </Dialog>
   )
 }
