@@ -5,9 +5,12 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+import { registerRestaurant } from '@/api/register-restaurant'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useMutation } from '@tanstack/react-query'
+import console from 'console'
 
 const signUpSchema = z.object({
   restaurantName: z.string()
@@ -49,23 +52,36 @@ export function SignUpForm() {
 
   const navigate = useNavigate()
 
-  async function handleSignUp(data: FormValues) {
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    toast.success('Sucesso!', {
-      description: 'Seu estabelecimento foi cadastrado, clique em login para acessar sua conta.',
-      action: {
-        label: 'Login',
-        onClick: () => navigate('/sign-in')
-      },
-      actionButtonStyle: {
-        backgroundColor: 'green',
-        marginTop: 10,
-      },
-      className: 'flex flex-wrap',
-      duration: 8000,
-    })
+  const { mutateAsync: registerRestaurantFn } = useMutation({
+    mutationFn: registerRestaurant,
+  })
 
-    console.log(data)
+  async function handleSignUp(formData: FormValues) {
+    try {
+      await registerRestaurantFn({
+        restaurantName: formData.restaurantName,
+        managerName: formData.managerName,
+        phone: formData.phone,
+        email: formData.email
+      })
+      toast.success('Sucesso!', {
+        description: 'Seu estabelecimento foi cadastrado, clique em login para acessar sua conta.',
+        action: {
+          label: 'Login',
+          onClick: () => navigate(`/sign-in?email=${formData.email}`)
+        },
+        actionButtonStyle: {
+          backgroundColor: 'green',
+          marginTop: 10,
+        },
+        className: 'flex flex-wrap',
+        duration: 8000,
+      })
+    } catch (err) {
+      const error = err as Error
+      console.log(error)
+      toast.error(error.message)
+    }
   }
 
   function formatPhone(phone: string) {

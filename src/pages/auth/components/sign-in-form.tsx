@@ -3,9 +3,12 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+import { signIn } from '@/api/sign-in'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useMutation } from '@tanstack/react-query'
+import { useSearchParams } from 'react-router-dom'
 
 const formSchema = z.object({
   email: z.string({
@@ -18,25 +21,40 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>
 
 export function SignInForm() {
+  const [searchParams] = useSearchParams()
+
   const { register, handleSubmit, formState: { isSubmitting, errors } } = useForm<FormValues>({
-    resolver: zodResolver(formSchema)
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: searchParams.get('email') || ''
+    }
+  })
+
+  const { mutateAsync: authenticate } = useMutation({
+    mutationFn: signIn,
   })
 
   async function handleSignIn(data: FormValues) {
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    toast.success('Bem vindo', {
-      description: 'Enviamos um link de autenticação para o seu email!',
-      action: {
-        label: 'Reenviar',
-        onClick: () => handleSignIn(data)
-      },
-      actionButtonStyle: {
-        backgroundColor: 'green',
-        marginTop: 10,
-      },
-      className: 'flex flex-wrap'
-    })
-    console.log(data)
+
+    try {
+      await authenticate({ email: data.email })
+
+      toast.success('Bem vindo', {
+        description: 'Enviamos um link de autenticação para o seu email!',
+        action: {
+          label: 'Reenviar',
+          onClick: () => handleSignIn(data)
+        },
+        actionButtonStyle: {
+          backgroundColor: 'green',
+          marginTop: 10,
+        },
+        className: 'flex flex-wrap'
+      })
+    } catch (err) {
+      const error = err as Error
+      toast.error(error.message)
+    }
   }
 
   return (
