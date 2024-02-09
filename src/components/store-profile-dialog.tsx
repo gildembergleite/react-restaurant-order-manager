@@ -1,8 +1,10 @@
 import { getManagedRestaurant } from '@/api/get-managed-restaurant'
+import { updateProfile } from '@/api/update-profile'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DialogDescription } from '@radix-ui/react-dialog'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 import { Button } from './ui/button'
 import { DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog'
@@ -21,6 +23,7 @@ export function StoreProfileDialog() {
   const { data: managedRestaurant } = useQuery({
     queryKey: ['managed-restaurant'],
     queryFn: getManagedRestaurant,
+    staleTime: Infinity
   })
 
   const form = useForm<StoreProfileSchema>({
@@ -31,9 +34,25 @@ export function StoreProfileDialog() {
     }
   })
 
-  async function updateProfile(formData: StoreProfileSchema) {
+  async function handleUpdateProfile(formData: StoreProfileSchema) {
+    try {
+      await updateProfileFn({
+        name: formData.name,
+        description: formData.description,
+      })
+
+      toast.success('Perfil atualizado com sucesso!')
+    } catch {
+      toast.error('Não foi possível atualizar o perfil')
+    }
     console.log(formData)
   }
+
+  const { mutateAsync: updateProfileFn } = useMutation({
+    mutationFn: updateProfile,
+  })
+
+  const { formState: { isSubmitting } } = form
 
   return (
     <DialogContent>
@@ -44,7 +63,7 @@ export function StoreProfileDialog() {
         </DialogDescription>
       </DialogHeader>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(updateProfile)} className='space-y-6 py-2'>
+        <form onSubmit={form.handleSubmit(handleUpdateProfile)} className='space-y-6 py-2'>
           <FormField
             control={form.control}
             name='name'
@@ -93,7 +112,7 @@ export function StoreProfileDialog() {
                 Cancelar
               </Button>
             </DialogClose>
-            <Button type='submit' variant={'sucess'}>
+            <Button type='submit' variant={'sucess'} disabled={isSubmitting}>
               Salvar
             </Button>
           </DialogFooter>
