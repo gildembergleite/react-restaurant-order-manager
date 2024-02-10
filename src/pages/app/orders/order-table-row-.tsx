@@ -6,16 +6,21 @@ import { TableCell, TableRow } from '@/components/ui/table'
 
 import { OrderDetails } from './order-details'
 
+import { OrderStatus } from '@/components/order-status'
+import { formatCurrency } from '@/utils/format-currency'
+import { formatTime } from '@/utils/format-time'
+
 interface OrderTableRow {
-  id: string
-  date: string
-  status: string
-  client: string
-  total: string
+  order: {
+    orderId: string;
+    createdAt: Date;
+    status: 'pending' | 'canceled' | 'processing' | 'delivering' | 'delivered'
+    customerName: string;
+    total: number;
+  }
 }
 
-export function OrderTableRow(props: OrderTableRow) {
-  const { id, date, status, client, total } = props
+export function OrderTableRow({ order }: OrderTableRow) {
 
   return (
     <TableRow>
@@ -32,25 +37,20 @@ export function OrderTableRow(props: OrderTableRow) {
       </TableCell>
       <TableCell>
         <div className='w-full max-w-40 font-mone text-xs font-medium truncate pr-4'>
-          {id}
+          {order.orderId}
         </div>
       </TableCell>
       <TableCell className='text-muted-foreground whitespace-nowrap pr-4'>
-        {date}
+        {formatTime(order.createdAt)}
       </TableCell>
       <TableCell>
-        <div className='flex items-center gap-2 pr-4'>
-          <span className='h-2 w-2 rounded-full bg-slate-400' />
-          <span className='font-medium text-muted-foreground'>
-            {status}
-          </span>
-        </div>
+        <OrderStatus status={order.status} />
       </TableCell>
       <TableCell className='font-medium whitespace-nowrap pr-4'>
-        {client}
+        {order.customerName}
       </TableCell>
       <TableCell className='font-medium whitespace-nowrap pr-4'>
-        {total}
+        {formatCurrency(order.total)}
       </TableCell>
       <TableCell>
         <Button variant={'ghost'} size={'sm'} className='gap-1 items-center'>

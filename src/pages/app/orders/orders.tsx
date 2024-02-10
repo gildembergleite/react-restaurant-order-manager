@@ -9,10 +9,17 @@ import {
   TableRow
 } from '@/components/ui/table'
 
+import { getOrders } from '@/api/get-orders'
+import { useQuery } from '@tanstack/react-query'
 import { OrderTableFilter } from './order-table-filters'
 import { OrderTableRow } from './order-table-row-'
 
 export function Orders() {
+  const { data: result } = useQuery({
+    queryKey: ['orders'],
+    queryFn: getOrders
+  })
+
   return (
     <>
       <Helmet title="Pedidos" />
@@ -39,14 +46,10 @@ export function Orders() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {Array.from({ length: 10 }).map((_, index) => (
+                {result && result.orders.map((order) => (
                   <OrderTableRow
-                    key={index}
-                    id={'as08d9-q9a8w7dh-9as8hd'}
-                    client={'João da Silva'}
-                    date={'há 25 minutos'}
-                    status={'Pendente'}
-                    total={'R$ 129,37'}
+                    key={order.orderId}
+                    order={order}
                   />
                 ))}
               </TableBody>
