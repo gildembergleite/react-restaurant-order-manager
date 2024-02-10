@@ -3,7 +3,9 @@ import { BuildingIcon, ChevronDownIcon, LogOutIcon } from 'lucide-react'
 
 import { getManagedRestaurant } from '@/api/get-managed-restaurant'
 import { getProfile } from '@/api/get-profile'
-import { useQuery } from '@tanstack/react-query'
+import { signOut } from '@/api/sign-out'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 import { StoreProfileDialog } from './store-profile-dialog'
 import { Button } from './ui/button'
 import { Dialog, DialogTrigger } from './ui/dialog'
@@ -16,6 +18,8 @@ import {
 import { Skeleton } from './ui/skeleton'
 
 export function AccountMenu() {
+  const navigate = useNavigate()
+
   const { data: profile, isLoading: isLoadingProfile } = useQuery({
     queryKey: ['profile'],
     queryFn: getProfile,
@@ -26,6 +30,13 @@ export function AccountMenu() {
     queryKey: ['managed-restaurant'],
     queryFn: getManagedRestaurant,
     staleTime: Infinity
+  })
+
+  const { mutateAsync: signOutFn, isPending: isSigninOut } = useMutation({
+    mutationFn: signOut,
+    onSuccess: () => {
+      navigate('/sign-in', { replace: true })
+    }
   })
 
   return (
@@ -74,7 +85,11 @@ export function AccountMenu() {
                 <span>Perfil da loja</span>
               </DropdownMenuItem>
             </DialogTrigger>
-            <DropdownMenuItem className='flex items-center gap-2 cursor-pointer'>
+            <DropdownMenuItem
+              className='flex items-center gap-2 cursor-pointer'
+              onClick={() => signOutFn()}
+              disabled={isSigninOut}
+            >
               <LogOutIcon size={16} className='text-rose-600 dark:text-rose-500' />
               <span>Sair</span>
             </DropdownMenuItem>
