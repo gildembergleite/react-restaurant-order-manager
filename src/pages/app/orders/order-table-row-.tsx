@@ -9,30 +9,32 @@ import { OrderDetails } from './order-details'
 import { OrderStatus } from '@/components/order-status'
 import { formatCurrency } from '@/utils/format-currency'
 import { formatTime } from '@/utils/format-time'
+import { useState } from 'react'
 
 interface OrderTableRow {
   order: {
-    orderId: string;
-    createdAt: Date;
+    orderId: string
+    createdAt: string
     status: 'pending' | 'canceled' | 'processing' | 'delivering' | 'delivered'
-    customerName: string;
-    total: number;
+    customerName: string
+    total: number
   }
 }
 
 export function OrderTableRow({ order }: OrderTableRow) {
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
 
   return (
     <TableRow>
       <TableCell>
-        <Dialog>
+        <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
           <DialogTrigger asChild>
             <Button size={'sm'}>
               <SearchIcon size={12} />
               <span className='sr-only'>Detalhes do pedido</span>
             </Button>
           </DialogTrigger>
-          <OrderDetails />
+          <OrderDetails orderId={order.orderId} open={isDetailsOpen} />
         </Dialog>
       </TableCell>
       <TableCell>

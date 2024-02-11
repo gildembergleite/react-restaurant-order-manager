@@ -1,6 +1,6 @@
-export function formatTime(value: Date) {
+export function formatTime(dateValue: string) {
   const now = new Date()
-  const date = new Date(value)
+  const date = new Date(dateValue)
 
   const diff = Math.round((now.getTime() - date.getTime()) / 1000)
 

@@ -1,7 +1,8 @@
 import { cn } from '@/lib/utils'
 import { ClassNameValue } from 'tailwind-merge'
+import { Skeleton } from './ui/skeleton'
 
-type OrderStatus =
+export type OrderStatus =
   | 'pending'
   | 'canceled'
   | 'processing'
@@ -21,13 +22,20 @@ const orderStatusMap: Record<OrderStatus, OrderStatusInfo> = {
   delivered: { value: 'Entregue', color: 'bg-green-500' }
 }
 
-export function OrderStatus({ status }: { status: OrderStatus }) {
+export function OrderStatus({ status }: { status: OrderStatus | undefined}) {
   return (
-    <div className='flex items-center gap-2 pr-4'>
-      <span className={cn('h-2 w-2 rounded-full', orderStatusMap[status].color)} />
-      <span className='font-medium text-muted-foreground capitalize'>
-        {orderStatusMap[status].value}
-      </span>
-    </div>
+    <>
+      {status
+        ? (
+          <div className='flex items-center gap-2'>
+            <span className={cn('h-2 w-2 rounded-full', orderStatusMap[status].color)} />
+            <span className='font-medium text-muted-foreground'>
+              {orderStatusMap[status].value}
+            </span>
+          </div>
+        )
+        : <Skeleton className='h-4 w-20 rounded-full' />
+      }
+    </>
   )
 }

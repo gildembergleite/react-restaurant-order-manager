@@ -1,18 +1,33 @@
-import { DialogDescription } from '@radix-ui/react-dialog'
 
+import { getOrderDetails } from '@/api/get-order-details'
+import { OrderStatus } from '@/components/order-status'
 import { DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { formatCurrency } from '@/utils/format-currency'
+import { formatTime } from '@/utils/format-time'
+import { useQuery } from '@tanstack/react-query'
 
-export function OrderDetails() {
+interface OrderDetailsProps {
+  orderId: string
+  open: boolean
+}
+
+export function OrderDetails({ orderId, open }: OrderDetailsProps) {
+
+  const { data: order } = useQuery({
+    queryKey: ['order', orderId],
+    queryFn: () => getOrderDetails(orderId),
+    enabled: open
+  })
+
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>
-          Pedido: as9das9iudh9sudgas7
+        <DialogTitle className='flex gap-2'>
+          <span>ID:</span>
+          {order?.id ? order.id : <Skeleton className='h-5 w-64' />}
         </DialogTitle>
-        <DialogDescription>
-          Descrição do pedido
-        </DialogDescription>
       </DialogHeader>
       <div className='space-y-6'>
         <Table>
@@ -20,33 +35,39 @@ export function OrderDetails() {
             <TableRow>
               <TableCell className='text-muted-foreground'>Status</TableCell>
               <TableCell className='flex justify-end'>
-                <div className='flex items-center gap-2'>
-                  <span className='h-2 w-2 rounded-full bg-slate-400' />
-                  <span className='font-medium text-muted-foreground'>
-                    Pendente
-                  </span>
-                </div>
+                <OrderStatus status={order?.status} />
               </TableCell>
             </TableRow>
 
             <TableRow>
               <TableCell className='text-muted-foreground'>Cliente</TableCell>
               <TableCell className='flex justify-end'>
-                João da Silva
+                {order?.customer.name
+                  ? order?.customer.name
+                  : <Skeleton className='h-4 w-32' />
+                }
               </TableCell>
             </TableRow>
 
             <TableRow>
               <TableCell className='text-muted-foreground'>Telefone</TableCell>
               <TableCell className='flex justify-end'>
-                (00) 00000-0000
+                {order?.customer.phone
+                  ? order.customer.phone
+                  : order?.customer.phone === undefined
+                    ? <Skeleton className='h-4 w-24' />
+                    : 'Sem número'
+                }
               </TableCell>
             </TableRow>
 
             <TableRow>
               <TableCell className='text-muted-foreground'>Realizado</TableCell>
               <TableCell className='flex justify-end'>
-                há 1 hora
+                {order?.createdAt
+                  ? formatTime(order?.createdAt)
+                  : <Skeleton className='h-4 w-20' />
+                }
               </TableCell>
             </TableRow>
           </TableBody>
@@ -62,24 +83,36 @@ export function OrderDetails() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
-              <TableCell>Pizza de Pepperoni Família</TableCell>
-              <TableCell className='text-right'>2</TableCell>
-              <TableCell className='text-right'>R$ 69,90</TableCell>
-              <TableCell className='text-right'>R$ 139,80</TableCell>
-            </TableRow>
-
-            <TableRow>
-              <TableCell>Pizza de Muzarela Família</TableCell>
-              <TableCell className='text-right'>2</TableCell>
-              <TableCell className='text-right'>R$ 49,90</TableCell>
-              <TableCell className='text-right'>R$ 99,80</TableCell>
-            </TableRow>
+            {order?.orderItems.map((orderItem) => (
+              <TableRow key={orderItem.id}>
+                <TableCell>{orderItem.product.name}</TableCell>
+                <TableCell className='text-right'>
+                  {orderItem.quantity}
+                </TableCell>
+                <TableCell className='text-right'>
+                  {orderItem.priceInCents
+                    ? formatCurrency(orderItem.priceInCents)
+                    : <Skeleton className='h-4 w-12' />
+                  }
+                </TableCell>
+                <TableCell className='text-right'>
+                  {orderItem.priceInCents
+                    ? formatCurrency(orderItem.priceInCents * orderItem.quantity)
+                    : <Skeleton className='h-4 w-12' />
+                  }
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TableCell colSpan={3}>Total do pedido</TableCell>
-              <TableCell className='text-right'>R$ 238,60</TableCell>
+              <TableCell className='flex justify-end'>
+                {order?.totalInCents
+                  ? formatCurrency(order.totalInCents)
+                  : <Skeleton className='h-4 w-20' />
+                }
+              </TableCell>
             </TableRow>
           </TableFooter>
         </Table>
