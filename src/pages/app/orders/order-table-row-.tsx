@@ -36,7 +36,7 @@ export function OrderTableRow({ order }: OrderTableRow) {
         </Dialog>
       </TableCell>
       <TableCell>
-        <div className='w-full max-w-40 font-mone text-xs font-medium truncate pr-4'>
+        <div className='w-48 font-mone text-xs font-medium pr-4'>
           {order.orderId}
         </div>
       </TableCell>
