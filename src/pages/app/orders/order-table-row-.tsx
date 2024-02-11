@@ -52,7 +52,7 @@ export function OrderTableRow({ order }: OrderTableRow) {
         {order.customerName}
       </TableCell>
       <TableCell className='font-medium whitespace-nowrap pr-4'>
-        {formatCurrency(order.total)}
+        {formatCurrency(order.total, true)}
       </TableCell>
       <TableCell>
         <Button variant={'ghost'} size={'sm'} className='gap-1 items-center'>

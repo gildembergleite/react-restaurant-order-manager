@@ -91,13 +91,13 @@ export function OrderDetails({ orderId, open }: OrderDetailsProps) {
                 </TableCell>
                 <TableCell className='text-right'>
                   {orderItem.priceInCents
-                    ? formatCurrency(orderItem.priceInCents)
+                    ? formatCurrency(orderItem.priceInCents, true)
                     : <Skeleton className='h-4 w-12' />
                   }
                 </TableCell>
                 <TableCell className='text-right'>
                   {orderItem.priceInCents
-                    ? formatCurrency(orderItem.priceInCents * orderItem.quantity)
+                    ? formatCurrency(orderItem.priceInCents * orderItem.quantity, true)
                     : <Skeleton className='h-4 w-12' />
                   }
                 </TableCell>
@@ -109,7 +109,7 @@ export function OrderDetails({ orderId, open }: OrderDetailsProps) {
               <TableCell colSpan={3}>Total do pedido</TableCell>
               <TableCell className='flex justify-end'>
                 {order?.totalInCents
-                  ? formatCurrency(order.totalInCents)
+                  ? formatCurrency(order.totalInCents, true)
                   : <Skeleton className='h-4 w-20' />
                 }
               </TableCell>
