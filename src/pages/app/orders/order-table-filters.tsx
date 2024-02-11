@@ -23,7 +23,7 @@ export function OrderTableFilter() {
   const customerName = searchParams.get('customerName') ?? ''
   const status = searchParams.get('status') ?? ''
 
-  const { register, handleSubmit, control } = useForm<OrderTableFilter>({
+  const { register, handleSubmit, control, setValue } = useForm<OrderTableFilter>({
     resolver: zodResolver(orderFiltersSchema),
     defaultValues: {
       orderId,
@@ -52,6 +52,21 @@ export function OrderTableFilter() {
         state.delete('customerName')
       }
 
+      state.set('page', '1')
+
+      return state
+    })
+  }
+
+  function handleClearFilters() {
+    setValue('orderId', undefined)
+    setValue('customerName', undefined)
+    setValue('status', 'all')
+
+    setSearchParams((state) => {
+      state.delete('orderId')
+      state.delete('customerName')
+      state.delete('status')
       state.set('page', '1')
 
       return state
@@ -106,7 +121,7 @@ export function OrderTableFilter() {
         Filtrar resultados
       </Button>
 
-      <Button type='submit' variant={'outline'} className='gap-1'>
+      <Button onClick={handleClearFilters} type='submit' variant={'outline'} className='gap-1'>
         <XIcon size={16} />
         Remover filtros
       </Button>
