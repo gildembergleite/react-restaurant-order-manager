@@ -15,6 +15,7 @@ import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 import { OrderTableFilter } from './order-table-filters'
 import { OrderTableRow } from './order-table-row-'
+import { OrderTableRowLoading } from './order-table-row-loading'
 
 export function Orders() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -66,12 +67,17 @@ export function Orders() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {result && result.orders.map((order) => (
-                  <OrderTableRow
-                    key={order.orderId}
-                    order={order}
-                  />
-                ))}
+                {result
+                  ? result.orders.map((order) => (
+                    <OrderTableRow
+                      key={order.orderId}
+                      order={order}
+                    />
+                  ))
+                  : Array.from(({ length: 10 })).map((_, index) => (
+                    <OrderTableRowLoading key={index} />
+                  ))
+                }
               </TableBody>
             </Table>
           </div>

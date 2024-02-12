@@ -106,16 +106,16 @@ export function OrderTableRow({ order }: OrderTableRow) {
           {order.orderId}
         </div>
       </TableCell>
-      <TableCell className='text-muted-foreground whitespace-nowrap pr-4'>
+      <TableCell className='text-muted-foreground whitespace-nowrap pr-12'>
         {formatTime(order.createdAt)}
       </TableCell>
       <TableCell>
         <OrderStatus status={order.status} />
       </TableCell>
-      <TableCell className='font-medium whitespace-nowrap pr-4'>
+      <TableCell className='w-full font-medium whitespace-nowrap'>
         {order.customerName}
       </TableCell>
-      <TableCell className='font-medium whitespace-nowrap pr-4'>
+      <TableCell className='w-20 font-medium whitespace-nowrap pr-20'>
         {formatCurrency(order.total, true)}
       </TableCell>
       <TableCell>
