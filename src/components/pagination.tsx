@@ -19,7 +19,7 @@ export default function Pagination(props: PaginationProps) {
   return (
     <div className="flex items-center justify-between">
       <span className="text-sm text-muted-foreground">
-        Total de {totalCount} de item(s)
+        Total de {totalCount} item(s)
       </span>
 
       <div className="flex items-center gap-6 lg:gap-8">
@@ -35,12 +35,12 @@ export default function Pagination(props: PaginationProps) {
 
           <Button disabled={isTheFirstPage} onClick={() => onPageChange(pageIndex - 1)} variant={'outline'} className="w-8 h-8 p-0">
             <ChevronLeftIcon size={16} />
-            <span className="sr-only">Próxima página</span>
+            <span className="sr-only">Página anterior</span>
           </Button>
 
           <Button disabled={isTheLastPage} onClick={() => onPageChange(pageIndex + 1)} variant={'outline'} className="w-8 h-8 p-0">
             <ChevronRightIcon size={16} />
-            <span className="sr-only">Página anterior</span>
+            <span className="sr-only">Próxima página</span>
           </Button>
 
           <Button disabled={isTheLastPage} onClick={() => onPageChange(pages - 1)} variant={'outline'} className="w-8 h-8 p-0">
