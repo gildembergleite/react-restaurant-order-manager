@@ -4,6 +4,7 @@ import colors from 'tailwindcss/colors'
 
 import { getPopularProducts } from '@/api/get-popular-products'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useQuery } from '@tanstack/react-query'
 
 const COLORS = [
@@ -59,7 +60,7 @@ export function PopularProductsChart() {
   }
 
   return (
-    <Card className="col-span-3">
+    <Card className="flex flex-col col-span-3 justify-between">
       <CardHeader className="pb-8">
         <div className="flex items-center justify-between w-full">
           <CardTitle>Produtos populares</CardTitle>
@@ -67,32 +68,37 @@ export function PopularProductsChart() {
         </div>
       </CardHeader>
       <CardContent>
-        {popularProducts && (
-          <ResponsiveContainer width={'100%'} height={240}>
-            <PieChart style={{ fontSize: 12 }}>
-              <Pie
-                data={popularProducts}
-                dataKey={'amount'}
-                nameKey={'product'}
-                cx={'50%'}
-                cy={'50%'}
-                outerRadius={86}
-                innerRadius={56}
-                strokeWidth={6}
-                labelLine={false}
-                label={(props: LabelProps) => buildLabelChart(props)}
-              >
-                {popularProducts.map((_, index) => (
-                  <Cell
-                    key={index}
-                    fill={COLORS[index]}
-                    className='stroke-background hover:opacity-75'
-                  />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-        )}
+        {popularProducts
+          ? (
+            <ResponsiveContainer width={'100%'} height={240}>
+              <PieChart style={{ fontSize: 12 }}>
+                <Pie
+                  data={popularProducts}
+                  dataKey={'amount'}
+                  nameKey={'product'}
+                  cx={'50%'}
+                  cy={'50%'}
+                  outerRadius={86}
+                  innerRadius={56}
+                  strokeWidth={6}
+                  labelLine={false}
+                  label={(props: LabelProps) => buildLabelChart(props)}
+                >
+                  {popularProducts.map((_, index) => (
+                    <Cell
+                      key={index}
+                      fill={COLORS[index]}
+                      className='stroke-background hover:opacity-75'
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+          )
+          : (
+            <Skeleton className='h-60 w-full rounded-none' />
+          )
+        }
       </CardContent>
     </Card>
   )

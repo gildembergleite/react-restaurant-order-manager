@@ -5,6 +5,7 @@ import { getDailyRevenueInPeriod } from '@/api/get-daily-revenue-in-period'
 import { DatePickerWithRange } from '@/components/date-range-picker'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
+import { Skeleton } from '@/components/ui/skeleton'
 import { formatCurrency } from '@/utils/format-currency'
 import { useQuery } from '@tanstack/react-query'
 import { subDays } from 'date-fns'
@@ -38,36 +39,41 @@ export function RevenueChart() {
         </div>
       </CardHeader>
       <CardContent>
-        {dailyRevenueInPeriod && (
-          <ResponsiveContainer width={'100%'} height={240}>
-            <LineChart data={dailyRevenueInPeriod} style={{ fontSize: 12 }}>
-              <XAxis
-                dataKey="date"
-                tickLine={false}
-                axisLine={false}
-                dy={16}
-              />
-              <YAxis
-                stroke='#888'
-                axisLine={false}
-                tickLine={false}
-                width={100}
-                tickMargin={20}
-                tickFormatter={(value: number) => formatCurrency(value, true)}
-              />
-              <Line
-                type={'linear'}
-                strokeWidth={2}
-                dataKey={'receipt'}
-                stroke={colors.violet['500']}
-              />
-              <CartesianGrid
-                vertical={false}
-                className='stroke-zinc-200 dark:stroke-zinc-600'
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        )}
+        {dailyRevenueInPeriod
+          ? (
+            <ResponsiveContainer width={'100%'} height={240}>
+              <LineChart data={dailyRevenueInPeriod} style={{ fontSize: 12 }}>
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  dy={16}
+                />
+                <YAxis
+                  stroke='#888'
+                  axisLine={false}
+                  tickLine={false}
+                  width={100}
+                  tickMargin={20}
+                  tickFormatter={(value: number) => formatCurrency(value, true)}
+                />
+                <Line
+                  type={'linear'}
+                  strokeWidth={2}
+                  dataKey={'receipt'}
+                  stroke={colors.violet['500']}
+                />
+                <CartesianGrid
+                  vertical={false}
+                  className='stroke-zinc-200 dark:stroke-zinc-600'
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          )
+          : (
+            <Skeleton className='h-60 w-full rounded-none' />
+          )
+        }
       </CardContent>
     </Card>
   )
