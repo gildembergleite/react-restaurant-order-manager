@@ -112,7 +112,7 @@ export function OrderTableRow({ order }: OrderTableRow) {
       <TableCell>
         <OrderStatus status={order.status} />
       </TableCell>
-      <TableCell className='w-full font-medium whitespace-nowrap'>
+      <TableCell className='w-full font-medium whitespace-nowrap pl-12'>
         {order.customerName}
       </TableCell>
       <TableCell className='w-20 font-medium whitespace-nowrap pr-20'>

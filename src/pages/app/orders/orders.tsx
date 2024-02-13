@@ -60,7 +60,7 @@ export function Orders() {
                   <TableHead className='w-40 whitespace-nowrap'>Identificador</TableHead>
                   <TableHead className='w-40 whitespace-nowrap'>Realizado há</TableHead>
                   <TableHead className='w-40'>Status</TableHead>
-                  <TableHead>Cliente</TableHead>
+                  <TableHead className='pl-12'>Cliente</TableHead>
                   <TableHead className='w-60 whitespace-nowrap'>Total do pedido</TableHead>
                   <TableHead className='w-32'></TableHead>
                   <TableHead className='w-32'></TableHead>

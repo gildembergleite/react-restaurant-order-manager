@@ -24,8 +24,11 @@ export function OrderStatus({ status }: { status: OrderStatus | undefined}) {
   return (
     <>
       {status && (
-        <div className='flex items-center gap-2 whitespace-nowrap pr-12'>
-          <span data-testid={`badge-${status}`} className={cn('h-2 w-2 rounded-full', orderStatusMap[status].color)} />
+        <div className='flex items-center gap-2 whitespace-nowrap'>
+          <span
+            data-testid={`badge-${status}`}
+            className={cn('h-2 w-2 rounded-full', orderStatusMap[status].color)}
+          />
           <span className='font-medium text-muted-foreground'>
             {orderStatusMap[status].value}
           </span>
