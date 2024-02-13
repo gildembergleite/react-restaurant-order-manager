@@ -1,7 +1,11 @@
 import { OrderStatus } from '@/components/order-status'
 import { api } from '@/lib/axios'
 
-interface GetOrderDetailsResponse {
+export interface GetOrderDetailsParams {
+  orderId: string
+}
+
+export interface GetOrderDetailsResponse {
   status: OrderStatus
   id: string
   createdAt: string
@@ -21,7 +25,7 @@ interface GetOrderDetailsResponse {
   }[]
 }
 
-export async function getOrderDetails(orderId: string) {
+export async function getOrderDetails({ orderId }: GetOrderDetailsParams) {
   const response = await api.get<GetOrderDetailsResponse>(`/orders/${orderId}`)
 
   return response.data
