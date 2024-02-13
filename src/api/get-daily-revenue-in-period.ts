@@ -5,7 +5,7 @@ interface GetDailyRevenueInPeriodQuery {
   to?: Date
 }
 
-interface GetDailyRevenueInPeriodResponse {
+export interface GetDailyRevenueInPeriodResponse {
   date: string
   receipt: number
 }

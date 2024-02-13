@@ -46,7 +46,6 @@ export function StoreProfileDialog() {
     } catch {
       toast.error('Não foi possível atualizar o perfil')
     }
-    console.log(formData)
   }
 
   function updateManagedRestaurantCache({ name, description }: StoreProfileSchema) {
