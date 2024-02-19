@@ -26,7 +26,8 @@ export function OrderStatus({ status }: { status: OrderStatus | undefined}) {
       {status && (
         <div className='flex items-center gap-2 whitespace-nowrap'>
           <span
-            data-testid={`badge-${status}`}
+            role='status'
+            aria-label={orderStatusMap[status].value}
             className={cn('h-2 w-2 rounded-full', orderStatusMap[status].color)}
           />
           <span className='font-medium text-muted-foreground'>

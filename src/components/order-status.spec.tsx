@@ -8,15 +8,15 @@ describe('Order Status', () => {
     ]))(
     'should display the right text "%s" and have class "%s" based on order status',
     (orderKey, expectedText, expectedClass) => {
-      const { getByText, getByTestId } = render(
+      const { getByText, getByLabelText } = render(
         <OrderStatus status={orderKey as OrderStatus} />
       )
 
       const statusText = getByText(expectedText)
-      const badgeElement = getByTestId(`badge-${orderKey}`)
+      const spanElement = getByLabelText(expectedText)
 
       expect(statusText).toBeInTheDocument()
-      expect(badgeElement).toHaveClass(expectedClass)
+      expect(spanElement).toHaveClass(expectedClass)
     }
   )
 })
