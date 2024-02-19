@@ -20,7 +20,7 @@ export const getOrderDetailsMock = http
             quantity: 2,
             priceInCents: 2000,
             product: {
-              name: 'Margherita'
+              name: 'Portuguesa'
             }
           },
           {
